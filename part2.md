@@ -1,6 +1,6 @@
-# 第2部：Pythonの基本操作（グラフ描画に必要な最低限）
+# 第2部：Pythonの基本操作
 
-この章では、グラフ描画に必要な最低限のPython基本操作について学びます。プログラミング経験がなくても大丈夫です。必要な知識だけを厳選して説明します。
+この章では、グラフ描画に必要なPython基本操作について学びます。プログラミング経験がなくても大丈夫です。
 
 ## 2.1 変数と代入
 
@@ -129,34 +129,6 @@ print(f"2番目から最後まで: {numbers[1:]}")  # [2, 3, 4, 5]
 print(f"最初から3番目まで: {numbers[:3]}")  # [1, 2, 3]
 ```
 
-### 2.3.2 リストの編集
-
-```python
-fruits = ["apple", "banana", "cherry"]
-
-# 要素の追加
-fruits.append("orange")
-print(fruits)  # ['apple', 'banana', 'cherry', 'orange']
-
-# 要素の挿入
-fruits.insert(1, "blueberry")
-print(fruits)  # ['apple', 'blueberry', 'banana', 'cherry', 'orange']
-
-# 要素の削除
-fruits.remove("banana")
-print(fruits)  # ['apple', 'blueberry', 'cherry', 'orange']
-
-# インデックスで要素を削除
-del fruits[0]
-print(fruits)  # ['blueberry', 'cherry', 'orange']
-
-# リストの連結
-list1 = [1, 2, 3]
-list2 = [4, 5, 6]
-combined = list1 + list2
-print(combined)  # [1, 2, 3, 4, 5, 6]
-```
-
 ### 2.3.3 NumPyの配列
 
 科学計算やグラフ描画では、NumPyの配列（array）を頻繁に使います。NumPy配列はリストに似ていますが、数値計算に最適化されています。
@@ -229,7 +201,69 @@ plt.grid(True)
 plt.show()
 ```
 
-## 2.5 練習問題
+## 2.5 関数の基本
+
+関数とは、特定の処理をまとめて名前をつけたものです。繰り返し使う処理を一度定義しておくと便利です。
+
+### 2.5.1 関数の定義と使い方
+
+```python
+# 関数の定義
+def greet(name):
+    """あいさつする関数"""
+    message = f"こんにちは、{name}さん！"
+    return message
+
+# 関数の使用
+result = greet("太郎")
+print(result)  # こんにちは、太郎さん！
+```
+
+関数の基本構造：
+```python
+def 関数名(引数1, 引数2, ...):
+    """関数の説明文（省略可）"""
+    # 処理内容
+    return 戻り値  # 戻り値を返す（省略可）
+```
+
+### 2.5.2 関数を使うメリット
+
+1. **コードの再利用**：同じ処理を何度も書く必要がなくなる
+2. **コードの整理**：処理をまとめることでプログラムが読みやすくなる
+3. **修正が簡単**：処理を変更する場合、関数定義を一箇所だけ修正すればよい
+
+### 2.5.3 グラフ描画での関数の活用例
+
+```python
+def plot_sine_wave(amplitude=1, frequency=1, phase=0):
+    """
+    正弦波をプロットする関数
+    
+    引数:
+    amplitude: 振幅
+    frequency: 周波数
+    phase: 位相（ラジアン）
+    """
+    import numpy as np
+    import matplotlib.pyplot as plt
+    
+    x = np.linspace(0, 2*np.pi, 100)
+    y = amplitude * np.sin(frequency * x + phase)
+    
+    plt.figure(figsize=(8, 4))
+    plt.plot(x, y)
+    plt.title(f"正弦波 (振幅={amplitude}, 周波数={frequency})")
+    plt.xlabel("x")
+    plt.ylabel("y")
+    plt.grid(True)
+    plt.show()
+
+# 関数の使用例
+plot_sine_wave(amplitude=2, frequency=2)  # 振幅2、周波数2の正弦波をプロット
+```
+
+## 2.6 練習問題
 
 ### 練習問題1: 変数と計算
 以下の計算結果を表示するコードを書いてください：
@@ -237,14 +271,36 @@ plt.show()
 2. 摂氏25度を華氏に変換（華氏 = 摂氏 × 9/5 + 32）
 
 ### 練習問題2: リスト操作
-1. 1から10までの整数を含むリストを作成
-2. そのリストの各要素を2倍した新しいリストを作成
-3. 元のリストから偶数だけを抽出した新しいリストを作成
+1. 1から10までの整数を含むリストを作成して表示
+2. リストの3番目の要素と最後の要素を表示
+3. リストの前半部分（最初の5つの要素）を取り出して表示
 
 ### 練習問題3: NumPy配列
 1. 0から2πまでの範囲を100分割したNumPy配列を作成
 2. その配列を使って、sin(x)とcos(x)を計算
 3. matplotlibを使って、sin(x)とcos(x)をグラフにプロット
+
+### 練習問題4: 関数の作成
+1. 摂氏から華氏に変換する関数 `celsius_to_fahrenheit` を作成
+2. 半径から円の面積を計算する関数 `calculate_circle_area` を作成
+3. 以下の関数を完成させて、指定した範囲でのグラフをプロットする関数を作成
+```python
+def plot_function(func, start, end, points=100, title="関数のグラフ"):
+    """
+    指定した関数のグラフをプロットする
+    
+    引数:
+    func: プロットする関数（例: np.sin, np.cos）
+    start: x軸の開始値
+    end: x軸の終了値
+    points: プロットする点の数
+    title: グラフのタイトル
+    """
+    # ここにコードを書く
+    
+# 使用例
+plot_function(np.sin, 0, 2*np.pi, title="正弦関数")
+```
 
 ## 解答例
 
@@ -272,28 +328,19 @@ print(f"{celsius}℃は{fahrenheit}°Fです")
 ```python
 # 1から10までのリスト
 numbers = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+print(f"リスト: {numbers}")
 
-# 各要素を2倍したリスト
-doubled = []
-for num in numbers:
-    doubled.append(num * 2)
-print(f"元のリスト: {numbers}")
-print(f"2倍したリスト: {doubled}")
+# 3番目の要素
+third_element = numbers[2]  # インデックスは0から始まるので、3番目は2
+print(f"3番目の要素: {third_element}")
 
-# リスト内包表記を使った別の方法
-doubled_compact = [num * 2 for num in numbers]
-print(f"2倍したリスト（内包表記）: {doubled_compact}")
+# 最後の要素
+last_element = numbers[-1]
+print(f"最後の要素: {last_element}")
 
-# 偶数だけを抽出
-even_numbers = []
-for num in numbers:
-    if num % 2 == 0:  # 2で割った余りが0なら偶数
-        even_numbers.append(num)
-print(f"偶数のみ: {even_numbers}")
-
-# リスト内包表記を使った別の方法
-even_compact = [num for num in numbers if num % 2 == 0]
-print(f"偶数のみ（内包表記）: {even_compact}")
+# 前半部分（最初の5つの要素）
+first_half = numbers[:5]
+print(f"前半部分: {first_half}")
 ```
 
 ### 練習問題3の解答
@@ -319,6 +366,56 @@ plt.title('正弦波と余弦波')
 plt.legend()
 plt.grid(True)
 plt.show()
+```
+
+### 練習問題4の解答
+
+```python
+import math
+import numpy as np
+import matplotlib.pyplot as plt
+
+# 1. 摂氏から華氏への変換関数
+def celsius_to_fahrenheit(celsius):
+    """摂氏温度を華氏温度に変換する"""
+    return celsius * 9/5 + 32
+
+# 関数のテスト
+print(f"25℃ = {celsius_to_fahrenheit(25)}°F")
+print(f"0℃ = {celsius_to_fahrenheit(0)}°F")
+print(f"100℃ = {celsius_to_fahrenheit(100)}°F")
+
+# 2. 円の面積を計算する関数
+def calculate_circle_area(radius):
+    """半径から円の面積を計算する"""
+    return math.pi * radius ** 2
+
+# 関数のテスト
+print(f"半径5の円の面積: {calculate_circle_area(5):.2f}")
+print(f"半径10の円の面積: {calculate_circle_area(10):.2f}")
+
+# 3. グラフプロット関数
+def plot_function(func, start, end, points=100, title="関数のグラフ"):
+    """指定した関数のグラフをプロットする"""
+    # x軸のデータ生成
+    x = np.linspace(start, end, points)
+    # y軸のデータ計算
+    y = func(x)
+    
+    # グラフのプロット
+    plt.figure(figsize=(8, 5))
+    plt.plot(x, y)
+    plt.title(title)
+    plt.xlabel('x')
+    plt.ylabel('y')
+    plt.grid(True)
+    plt.show()
+
+# 関数の使用例
+plot_function(np.sin, 0, 2*np.pi, title="正弦関数")
+plot_function(np.cos, 0, 2*np.pi, title="余弦関数")
+# 2次関数のプロット
+plot_function(lambda x: x**2, -5, 5, title="2次関数")
 ```
 
 ## 次のステップ
