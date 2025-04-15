@@ -498,35 +498,112 @@ ax.set_ylabel('Amplitude [-]')
 ax.set_title('Sine Wave')
 ax.grid(True)
 
-# 様々な形式で保存
-formats = ['png', 'pdf', 'svg', 'eps', 'jpg', 'tif']
-for fmt in formats:
-    fig.savefig(f'sine_wave.{fmt}', 
-                dpi=300,              # 解像度（PDFやSVGは影響なし）
-                bbox_inches='tight',  # 余白を最小化
-                transparent=True)     # 背景を透明に
+# グラフを保存（output/figuresフォルダに保存）
+plt.savefig('output/figures/sine_wave.png', dpi=300, bbox_inches='tight')
+plt.savefig('output/figures/sine_wave.pdf', bbox_inches='tight')  # PDFフォーマット
+
+# 他の形式でも保存可能
+# plt.savefig('output/figures/sine_wave.svg')  # SVG形式
+# plt.savefig('output/figures/sine_wave.jpg')  # JPEG形式
+
+plt.show()  # 画面にも表示
 ```
 
 ファイル形式の選択ガイド：
 - **PNG**：ウェブや画面表示用、背景透過可能
 - **PDF**：論文投稿用、ベクター形式で高品質
 - **SVG**：ウェブ用ベクター形式、編集可能
-- **EPS**：出版用、一部の雑誌で要求される
-- **TIFF**：印刷出版用、高品質な画像形式
+- **JPEG**：写真などの連続的なトーンの画像に適している
+
+### 4.2.10 関数を使ったグラフ描画
+
+グラフ描画コードを関数にまとめると、再利用性が高まり効率的です：
+
+```python
+def create_scientific_plot(x_data, y_data, x_label, y_label, title, 
+                          save_path=None, color='blue', linestyle='-'):
+    """
+    科学論文品質のグラフを作成する関数
+    
+    引数:
+    x_data, y_data: プロットするデータ
+    x_label, y_label: 軸ラベル
+    title: グラフタイトル
+    save_path: 保存パス（Noneの場合は保存しない）
+    color: 線の色
+    linestyle: 線のスタイル
+    """
+    # フォント設定
+    plt.rcParams['font.family'] = 'Arial'
+    plt.rcParams['font.size'] = 12
+    
+    # グラフ作成
+    fig, ax = plt.subplots(figsize=(8, 5), dpi=300)
+    
+    # データのプロット
+    ax.plot(x_data, y_data, color=color, linestyle=linestyle, linewidth=1.5)
+    
+    # 軸ラベルとタイトル
+    ax.set_xlabel(x_label, fontsize=14)
+    ax.set_ylabel(y_label, fontsize=14)
+    ax.set_title(title, fontsize=16)
+    
+    # グリッドと目盛り
+    ax.grid(True, alpha=0.3)
+    ax.minorticks_on()
+    ax.tick_params(which='both', direction='in')
+    ax.tick_params(top=True, right=True)
+    
+    # 軸の線の太さ
+    for spine in ax.spines.values():
+        spine.set_linewidth(1.5)
+    
+    plt.tight_layout()
+    
+    # ファイル保存
+    if save_path:
+        plt.savefig(save_path, bbox_inches='tight')
+    
+    return fig, ax  # 必要に応じてさらにカスタマイズできるよう図とaxesを返す
+
+# 関数の使用例
+import numpy as np
+
+x = np.linspace(0, 360, 100)
+y = np.sin(np.radians(x))
+
+# 基本使用法
+create_scientific_plot(x, y, 
+                      'Angle [degree]', 
+                      'Amplitude [-]', 
+                      'Sine Wave', 
+                      'output/figures/sine_scientific.png')
+
+# カスタマイズして使用
+fig, ax = create_scientific_plot(x, y, 
+                               'Angle [degree]', 
+                               'Amplitude [-]', 
+                               'Sine Wave',
+                               color='red',
+                               linestyle='--')
+# さらに追加のカスタマイズ
+ax.set_xlim(0, 180)  # x軸の範囲を限定
+plt.show()
+```
 
 ## 4.3 演習問題
 
 ### 演習問題1：サンプルデータを使った基本グラフ
 
-1. 以下のコードを実行して、SineCurve.txtとCosineCurve.txtのデータを読み込み、一つのグラフにプロットしてください：
+1. 以下のコードを実行して、`data`フォルダ内のSineCurve.txtとCosineCurve.txtのデータを読み込み、一つのグラフにプロットしてください：
 
 ```python
 import pandas as pd
 import matplotlib.pyplot as plt
 
 # データ読み込み
-df_sine = pd.read_table("SineCurve.txt", names=["X", "Y"])
-df_cosine = pd.read_table("CosineCurve.txt", names=["X", "Y"])
+df_sine = pd.read_table("data/SineCurve.txt", names=["X", "Y"])
+df_cosine = pd.read_table("data/CosineCurve.txt", names=["X", "Y"])
 
 # ここにプロットコードを追加
 ```
@@ -542,30 +619,79 @@ df_cosine = pd.read_table("CosineCurve.txt", names=["X", "Y"])
    - フォントをArialに設定
    - 内向きの目盛線
 
-### 演習問題2：論文品質のグラフ作成
+### 演習問題2：関数を活用した論文品質のグラフ作成
 
-1. 以下のデータをプロットし、論文品質のグラフを作成してください：
-   - SineCurve.txt、CosineCurve.txt、plot.txt（散布図として）
-   - 縦横比：白銀比（1:1.414）
-   - 解像度：300 dpi
-   - 軸の太さ：1.5 pt
-   - 線の太さ：1.5 pt
-   - フォント：Arial、サイズ14 pt
-   - 補助目盛あり
-   - グリッド線あり（薄い灰色）
+1. 以下の関数を完成させて、論文品質のグラフを作成する関数を実装してください：
 
-2. 作成したグラフをPDFとPNG形式で保存してください。
+```python
+def plot_scientific_figure(x_data, y_data, x_label, y_label, title, 
+                          output_path=None, line_style='-', color='blue'):
+    """
+    論文品質のグラフを作成する関数
+    
+    引数:
+    x_data, y_data: プロットするデータ
+    x_label, y_label: 軸ラベル
+    title: グラフタイトル
+    output_path: 出力ファイルパス（Noneの場合は保存しない）
+    line_style: 線のスタイル
+    color: 線の色
+    """
+    # ここに関数の中身を実装してください
+    # 以下の要件を満たすようにしてください：
+    # - フォント：Arial
+    # - 解像度：300 dpi
+    # - 軸の太さ：1.5 pt
+    # - 補助目盛線あり
+    # - 目盛線は内向き
+    
+    # 関数の最後で図とaxesオブジェクトを返してください
+    return fig, ax
+```
 
-### 演習問題3：複数のサブプロットを含むグラフ
+2. 実装した関数を使って、以下のグラフを作成してください：
+   - SineCurve.txtのデータを使用した正弦波のグラフ
+   - グラフを"output/figures/sine_scientific.png"として保存
 
-1. 3つのサブプロットを含む図を作成してください：
-   - 上段：SineCurveのプロット
-   - 中段：CosineCurveのプロット
-   - 下段：SineCurveとCosineCurveの2乗和（理論上は常に1）
+### 演習問題3：ファイル選択と複数グラフの描画
 
-2. 各サブプロットに適切な軸ラベルとタイトルを付けてください。
+1. tkinterのファイル選択ダイアログを使って、データファイルを選択し、そのデータをグラフ化するプログラムを作成してください：
+   
+```python
+import pandas as pd
+import matplotlib.pyplot as plt
+import tkinter as tk
+from tkinter import filedialog
 
-3. 全体のスタイルを論文品質に整えてください。
+def plot_selected_file():
+    # ファイル選択ダイアログを表示
+    root = tk.Tk()
+    root.withdraw()
+    file_path = filedialog.askopenfilename(
+        title="グラフ化するデータファイルを選択",
+        filetypes=[("テキストファイル", "*.txt"), ("CSVファイル", "*.csv"), ("すべてのファイル", "*.*")]
+    )
+    
+    if not file_path:
+        print("ファイルが選択されませんでした。")
+        return
+    
+    # ここにファイルを読み込み、グラフ化するコードを追加
+    # ヒント: ファイルの拡張子によって読み込み方法を変える
+    
+    # グラフのタイトルにはファイル名を含める
+    
+    # グラフを保存
+    
+# 関数を実行
+plot_selected_file()
+```
+
+2. 以下の仕様を満たすようにしてください：
+   - ファイル拡張子に応じて適切な読み込み方法を選択
+   - 読み込んだデータを論文品質のグラフとして表示
+   - グラフのタイトルにファイル名を含める
+   - `output/figures/`フォルダにグラフを保存
 
 ## 解答例
 
@@ -576,8 +702,8 @@ import pandas as pd
 import matplotlib.pyplot as plt
 
 # データ読み込み
-df_sine = pd.read_table("SineCurve.txt", names=["X", "Y"])
-df_cosine = pd.read_table("CosineCurve.txt", names=["X", "Y"])
+df_sine = pd.read_table("data/SineCurve.txt", names=["X", "Y"])
+df_cosine = pd.read_table("data/CosineCurve.txt", names=["X", "Y"])
 
 # フォント設定
 plt.rcParams["font.family"] = "Arial"
@@ -614,6 +740,9 @@ ax.tick_params(top=True, right=True)
 # グリッド線
 ax.grid(True, alpha=0.5)
 
+# 保存
+plt.savefig('output/figures/sine_cosine.png', dpi=300, bbox_inches='tight')
+
 plt.show()
 ```
 
@@ -624,57 +753,75 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import numpy as np
 
-# データ読み込み
-df_sine = pd.read_table("SineCurve.txt", names=["X", "Y"])
-df_cosine = pd.read_table("CosineCurve.txt", names=["X", "Y"])
-df_points = pd.read_table("plot.txt", names=["X", "Y"])
+def plot_scientific_figure(x_data, y_data, x_label, y_label, title, 
+                          output_path=None, line_style='-', color='blue'):
+    """
+    論文品質のグラフを作成する関数
+    
+    引数:
+    x_data, y_data: プロットするデータ
+    x_label, y_label: 軸ラベル
+    title: グラフタイトル
+    output_path: 出力ファイルパス（Noneの場合は保存しない）
+    line_style: 線のスタイル
+    color: 線の色
+    """
+    # フォント設定
+    plt.rcParams['font.family'] = 'Arial'
+    plt.rcParams['font.size'] = 12
+    
+    # 図とaxesオブジェクトの作成
+    fig, ax = plt.subplots(figsize=(8, 5), dpi=300)
+    
+    # データのプロット
+    ax.plot(x_data, y_data, linestyle=line_style, color=color, linewidth=1.5)
+    
+    # 軸ラベルとタイトル
+    ax.set_xlabel(x_label, fontsize=14)
+    ax.set_ylabel(y_label, fontsize=14)
+    ax.set_title(title, fontsize=16)
+    
+    # 目盛設定
+    ax.minorticks_on()  # 補助目盛を表示
+    ax.tick_params(which='both', direction='in')  # 目盛線を内向きに
+    ax.tick_params(which='major', length=6, width=1.5)  # 主目盛線の長さと太さ
+    ax.tick_params(which='minor', length=3, width=1.0)  # 補助目盛線の長さと太さ
+    ax.tick_params(top=True, right=True)  # 上と右の軸にも目盛線を表示
+    
+    # 軸線の太さ設定
+    for spine in ax.spines.values():
+        spine.set_linewidth(1.5)
+    
+    # グリッド
+    ax.grid(True, alpha=0.3)
+    
+    # レイアウト調整
+    plt.tight_layout()
+    
+    # ファイル保存
+    if output_path:
+        plt.savefig(output_path, dpi=300, bbox_inches='tight')
+        print(f"グラフを {output_path} に保存しました")
+    
+    return fig, ax
 
-# フォント設定
-plt.rcParams["font.family"] = "Arial"
-plt.rcParams["font.size"] = 14
+# 関数を使用
+# SineCurve.txtのデータを読み込み
+df_sine = pd.read_table("data/SineCurve.txt", names=["X", "Y"])
 
-# グラフの作成（白銀比、高解像度）
-fig, ax = plt.subplots(figsize=(7, 5), dpi=300)
+# グラフ作成と保存
+fig, ax = plot_scientific_figure(
+    df_sine["X"], df_sine["Y"],
+    "Angle [degree]",
+    "Amplitude [-]",
+    "Sine Wave",
+    "output/figures/sine_scientific.png",
+    color="blue"
+)
 
-# データのプロット
-ax.plot(df_sine["X"], df_sine["Y"], 
-        color='#1f77b4', linestyle='-', linewidth=1.5, 
-        label='Sine')
-ax.plot(df_cosine["X"], df_cosine["Y"], 
-        color='#ff7f0e', linestyle='--', linewidth=1.5, 
-        label='Cosine')
-ax.scatter(df_points["X"], df_points["Y"], 
-           color='#2ca02c', marker='o', s=50, 
-           label='Experimental')
-
-# 軸の範囲設定
+# 必要に応じて追加のカスタマイズ
 ax.set_xlim(0, 360)
 ax.set_ylim(-1.2, 1.2)
-
-# 軸ラベルとタイトル
-ax.set_xlabel('Angle [degree]')
-ax.set_ylabel('Amplitude [-]')
-ax.set_title('Comparison of Theoretical and Experimental Data')
-
-# 凡例
-ax.legend(loc='lower left', frameon=False)
-
-# 目盛線の設定
-ax.minorticks_on()
-ax.tick_params(which='major', direction='in', length=6, width=1.5)
-ax.tick_params(which='minor', direction='in', length=3, width=1.0)
-ax.tick_params(top=True, right=True)
-
-# 軸の太さ設定
-for spine in ax.spines.values():
-    spine.set_linewidth(1.5)
-
-# グリッド線
-ax.grid(True, color='gray', alpha=0.3)
-
-# グラフを保存
-plt.savefig('theoretical_and_experimental.pdf', bbox_inches='tight')
-plt.savefig('theoretical_and_experimental.png', bbox_inches='tight')
 
 plt.show()
 ```
@@ -684,70 +831,107 @@ plt.show()
 ```python
 import pandas as pd
 import matplotlib.pyplot as plt
-import numpy as np
+import tkinter as tk
+from tkinter import filedialog
+import os
 
-# データ読み込み
-df_sine = pd.read_table("SineCurve.txt", names=["X", "Y"])
-df_cosine = pd.read_table("CosineCurve.txt", names=["X", "Y"])
+def plot_selected_file():
+    """ファイル選択ダイアログでデータを選択し、グラフ化する関数"""
+    # ファイル選択ダイアログを表示
+    root = tk.Tk()
+    root.withdraw()
+    file_path = filedialog.askopenfilename(
+        title="グラフ化するデータファイルを選択",
+        filetypes=[("テキストファイル", "*.txt"), ("CSVファイル", "*.csv"), ("すべてのファイル", "*.*")]
+    )
+    
+    if not file_path:
+        print("ファイルが選択されませんでした。")
+        return
+    
+    print(f"選択されたファイル: {file_path}")
+    
+    # 出力ディレクトリの確認と作成
+    output_dir = "output/figures"
+    if not os.path.exists(output_dir):
+        os.makedirs(output_dir)
+        print(f"出力ディレクトリを作成しました: {output_dir}")
+    
+    # ファイル名（拡張子なし）の取得
+    file_name = os.path.basename(file_path)
+    file_name_without_ext = os.path.splitext(file_name)[0]
+    
+    # ファイルの拡張子に基づいて読み込み方法を選択
+    if file_path.endswith('.csv'):
+        # CSVファイルの場合
+        df = pd.read_csv(file_path)
+        print("CSVファイルを読み込みました")
+    else:
+        # テキストファイル（タブ区切り）の場合
+        df = pd.read_table(file_path, names=["X", "Y"] if file_path.endswith('.txt') else None)
+        print("テキストファイルを読み込みました")
+    
+    # データの先頭を表示
+    print("\nデータの先頭:")
+    print(df.head())
+    
+    # 最初の2列を使ってグラフ化
+    x_col = df.columns[0]
+    y_col = df.columns[1]
+    
+    # 論文品質のグラフ作成
+    plt.rcParams['font.family'] = 'Arial'
+    plt.rcParams['font.size'] = 12
+    
+    fig, ax = plt.subplots(figsize=(8, 5), dpi=300)
+    
+    # データをプロット
+    ax.plot(df[x_col], df[y_col], 'o-', color='#1f77b4', linewidth=1.5, markersize=4)
+    
+    # 軸ラベル
+    ax.set_xlabel(x_col, fontsize=14)
+    ax.set_ylabel(y_col, fontsize=14)
+    
+    # タイトル（ファイル名を含める）
+    ax.set_title(f"Data from {file_name}", fontsize=16)
+    
+    # グラフのスタイル設定
+    ax.minorticks_on()
+    ax.tick_params(which='both', direction='in')
+    ax.tick_params(top=True, right=True)
+    
+    # 軸の線の太さ
+    for spine in ax.spines.values():
+        spine.set_linewidth(1.5)
+    
+    # グリッド
+    ax.grid(True, alpha=0.3)
+    
+    # レイアウト調整
+    plt.tight_layout()
+    
+    # グラフの保存
+    output_path = f"{output_dir}/{file_name_without_ext}_plot.png"
+    plt.savefig(output_path, bbox_inches='tight')
+    print(f"グラフを保存しました: {output_path}")
+    
+    plt.show()
 
-# 2乗和の計算
-sum_of_squares = pd.DataFrame({
-    'X': df_sine['X'],
-    'Y': df_sine['Y']**2 + df_cosine['Y']**2
-})
-
-# フォント設定
-plt.rcParams["font.family"] = "Arial"
-plt.rcParams["font.size"] = 12
-
-# 複数のサブプロットを作成
-fig, (ax1, ax2, ax3) = plt.subplots(3, 1, figsize=(8, 10), dpi=300, sharex=True)
-
-# 1つ目のサブプロット（正弦波）
-ax1.plot(df_sine["X"], df_sine["Y"], 
-         color='blue', linewidth=1.5)
-ax1.set_ylabel('sin(x) [-]')
-ax1.set_title('Sine Wave')
-ax1.set_ylim(-1.2, 1.2)
-ax1.grid(True, alpha=0.5)
-ax1.minorticks_on()
-ax1.tick_params(which='both', direction='in')
-ax1.tick_params(top=True, right=True)
-
-# 2つ目のサブプロット（余弦波）
-ax2.plot(df_cosine["X"], df_cosine["Y"], 
-         color='red', linewidth=1.5)
-ax2.set_ylabel('cos(x) [-]')
-ax2.set_title('Cosine Wave')
-ax2.set_ylim(-1.2, 1.2)
-ax2.grid(True, alpha=0.5)
-ax2.minorticks_on()
-ax2.tick_params(which='both', direction='in')
-ax2.tick_params(top=True, right=True)
-
-# 3つ目のサブプロット（2乗和）
-ax3.plot(sum_of_squares["X"], sum_of_squares["Y"], 
-         color='green', linewidth=1.5)
-ax3.axhline(y=1, color='black', linestyle='--', alpha=0.7)
-ax3.set_xlabel('Angle [degree]')
-ax3.set_ylabel('sin²(x) + cos²(x) [-]')
-ax3.set_title('Sum of Squares')
-ax3.set_xlim(0, 360)
-ax3.set_ylim(0.9, 1.1)
-ax3.grid(True, alpha=0.5)
-ax3.minorticks_on()
-ax3.tick_params(which='both', direction='in')
-ax3.tick_params(top=True, right=True)
-
-# レイアウトの調整
-plt.tight_layout()
-
-# グラフを保存
-plt.savefig('multiple_subplots.pdf', bbox_inches='tight')
-plt.savefig('multiple_subplots.png', bbox_inches='tight')
-
-plt.show()
+# 関数を実行
+plot_selected_file()
 ```
+
+この解答コードでは、以下のことができます：
+
+1. tkinterのファイル選択ダイアログで、グラフ化したいデータファイルを選択
+2. ファイルの種類（CSVまたはテキストファイル）を自動判別して適切に読み込み
+3. 読み込んだデータの基本情報を表示
+4. 論文品質のグラフを作成（フォント設定、軸の太さ、内向き目盛など）
+5. グラフのタイトルに選択したファイル名を表示
+6. 出力ディレクトリが存在しない場合は自動作成
+7. グラフを高解像度のPNG形式で保存
+
+このコードは、様々なデータファイルに対して再利用可能で、研究データのクイック可視化に便利です。
 
 ## 総括
 
