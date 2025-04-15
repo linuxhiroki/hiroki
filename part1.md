@@ -19,14 +19,6 @@
   - フォント、サイズ、色、線の太さなど、あらゆる要素を細かく制御
   - 学術誌の要件に合わせた高解像度・高品質のグラフを作成可能
 
-### 目標とするグラフの例
-
-この研修を通じて、以下のような論文品質のグラフ作成を目指します：
-
-![目標とするグラフ例](https://media.githubusercontent.com/media/matplotlib/matplotlib/master/doc/_static/gallery_thumbnails/subplots_gridspec_hspace.png)
-
-*注：実際の研修では、研究室で実際に使用している論文品質のグラフ例を入れることを推奨します*
-
 ## 1.2 環境設定
 
 ### 1.2.1 Anacondaのインストール
@@ -34,8 +26,9 @@
 Anacondaは、Python本体と科学計算に必要な多数のライブラリを一括でインストールできるディストリビューションです。
 
 1. [Anacondaの公式サイト](https://www.anaconda.com/products/distribution)にアクセス
-2. お使いのOSに合わせたインストーラをダウンロード
-3. インストーラを実行し、画面の指示に従ってインストール
+2. 「Provide email to download Distribution」の下にある「skip registration」をクリック
+3. Windows用のインストーラをダウンロード
+4. インストーラを実行し、画面の指示に従ってインストール
    - 特別な理由がない限り、デフォルト設定のままでOK
    - インストール終了後、「Register Anaconda as my default Python」にチェックを入れることを推奨
 
@@ -43,9 +36,8 @@ Anacondaは、Python本体と科学計算に必要な多数のライブラリを
 
 Spyderは、科学計算向けの統合開発環境（IDE）です。コード編集、実行、デバッグが一つの画面で行えます。
 
-1. Windowsの場合：スタートメニュー → Anaconda3 → Spyder
-2. macOSの場合：Launchpad → Anaconda-Navigator → Spyder
-3. または、Anaconda Promptを開き、`spyder`と入力して実行
+1. スタートメニュー → Anaconda3 → Spyder
+2. または、Anaconda Promptを開き、`spyder`と入力して実行
 
 ### 1.2.3 Spyderの基本UI
 
@@ -57,20 +49,7 @@ Spyderの画面は主に3つのエリアに分かれています：
 2. **IPythonコンソール**（右下）：コードの実行結果が表示される場所
 3. **プロット表示エリア**（右上）：グラフが表示されるエリア（Plotsタブ）
 
-### 1.2.4 作業ディレクトリの設定
 
-作業ディレクトリとは、コードやデータファイルを置く場所です。適切に設定することで、ファイルのパス指定が簡単になります。
-
-1. デスクトップまたはドキュメントフォルダに「Python_Training」などの新しいフォルダを作成
-2. Spyderのメニューから「Tools」→「Preferences」を選択
-3. 左側の「Current working directory」を選択
-4. 「The following directory:」を選択し、先ほど作成したフォルダを指定
-5. 「Apply」→「OK」をクリック
-
-あるいは、簡単な方法として：
-
-1. Spyderの上部にある「Current working directory」欄の横の「Browse」ボタンをクリック
-2. 作業フォルダを選択して「Select Folder」をクリック
 
 ## 1.3 Spyderの基本操作
 
@@ -83,8 +62,6 @@ Spyderの画面は主に3つのエリアに分かれています：
 | Ctrl+1 | 選択行のコメントアウト/解除 |
 | Ctrl+S | ファイルの保存 |
 | Ctrl+N | 新規ファイルの作成 |
-| F9 | ファイル内の行を実行 |
-| Ctrl+Space | コード補完の表示 |
 
 ### 1.3.2 ファイルの保存と読み込み
 
@@ -179,13 +156,6 @@ plt.show()  # グラフの表示
 1. 以下の数式を計算するコードを書いて実行してください：
    - (5 + 3) × 4 ÷ 2
    - 2の8乗
-
-2. 以下のようなグラフを描画してみましょう：
-   - x軸の範囲を0から10まで
-   - y = x × sin(x)のグラフ
-   - 青い線を使用
-
-**ヒント**: `import numpy as np`を使うと、sin関数などの数学関数や等間隔の数値列が使えます。
 
 ## 次のステップ
 
