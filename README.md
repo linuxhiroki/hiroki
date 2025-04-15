@@ -43,15 +43,6 @@
    - 論文品質のグラフを作るためのテクニック
    - 関数を活用した効率的なグラフ作成
 
-### 補足資料
-
-5. **`errors_solutions.md`**: よくあるエラーと解決法
-   - 環境設定・インストール関連のエラー
-   - Pythonの基本構文エラー
-   - データ読み込み関連のエラー
-   - グラフ描画関連のエラー
-   - 実行環境（Spyder）特有のエラー
-
 ### サンプルデータ
 
 研修で使用するデータファイルは `data` フォルダに配置されています：
@@ -98,22 +89,6 @@
 - Windows環境（研修はWindows向けに最適化されています）
 - Anacondaがインストールされていること(part1でやります)
 
-### 環境設定
-
-```python
-# 必要なライブラリが全てインストールされているか確認
-import matplotlib
-import numpy
-import pandas
-import tkinter
-import sys
-
-# バージョン確認
-print(f"Python: {sys.version}")
-print(f"Matplotlib: {matplotlib.__version__}")
-print(f"NumPy: {numpy.__version__}")
-print(f"Pandas: {pandas.__version__}")
-```
 ---
 
 本研修資料は、研究室の実際のニーズに基づいて作成されました。Python初学者が実験データを効率的に処理し、高品質なグラフを作成できるようになることを目指しています。
