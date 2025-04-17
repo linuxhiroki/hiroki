@@ -284,8 +284,7 @@ plot_sine_wave(amplitude=2, frequency=2)  # 振幅2、周波数2の正弦波を�
 1. 摂氏から華氏に変換する関数 `celsius_to_fahrenheit` を作成
 2. 半径から円の面積を計算する関数 `calculate_circle_area` を作成
 3. 以下の関数を完成させて、指定した範囲でのグラフをプロットする関数を作成
-
-(*追記 グラフのプロットはpart4でやるのでこの問題は飛ばして大丈夫です。)
+(*追記 グラフのプロットはpart4でやるので3は飛ばして大丈夫です。)
 
 ```python
 def plot_function(func, start, end, points=100, title="関数のグラフ"):
